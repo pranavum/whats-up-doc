@@ -1,19 +1,32 @@
 /* src/App.css */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+    background-color: #FAF9F5; /* Set background color on body */
+}
+
 .app-container {
-  font-family: 'NekstLight', sans-serif; /* Apply the font */
+  font-family: 'NekstLight', sans-serif;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  background-color: #FAF9F5;
   color: #333;
+  text-align: center;
+  min-height: 100vh; /* Use 100vh for full viewport height */
 }
 
 .prompt-input-container {
   display: flex;
   flex-direction: column;
-  margin: 20px auto; /* Center horizontally with margin */
-  width: 90%; /* Adjust width as needed */
-  max-width: 900px; /* Adjust max-width as needed */
+  margin: 20px auto;
+  width: 90%;
+  max-width: 900px;
 }
 
 .prompt-textarea-wrapper {
@@ -85,6 +98,7 @@
   justify-content: center;
   width: 80%;
   max-width: 800px;
+  text-align: center;
 }
 
 .drug-info-box {
