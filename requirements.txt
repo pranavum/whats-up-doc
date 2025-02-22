@@ -1,0 +1,14 @@
+beautifulsoup4
+requests
+pandas
+django
+django-extensions
+Pillow
+langchain
+python-dotenv
+langchain-google-genai
+pypdf
+langchain_chroma
+langchain_community
+fpdf
+google-generativeai
