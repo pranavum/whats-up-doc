@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import google.generativeai as genai
+from google import genai
 from google.genai import types
 import os
 from dotenv import load_dotenv
@@ -24,7 +24,7 @@ def call_gemini_with_rag(prompt_text, patient_file_content=None):
     try:
         contents = [prompt_text]
         if patient_file_content:
-            contents.append(patient_file_content)
+            contents.append({"text": patient_file_content}) # Ensure patient file content is also in contents
 
         response = client.models.generate_content(
             model='gemini-2.0-flash',
@@ -42,27 +42,17 @@ def call_gemini_with_rag(prompt_text, patient_file_content=None):
                 ]
             )
         )
+
+        print("Gemini API Response:", response) # Print the entire response object for inspection
+
         if response.text:
-            # Dummy response - Replace with actual LLM response parsing and formatting
-            dummy_response = {
-                "drugs": [
-                    {
-                        "generic_name": "acetaminophen",
-                        "proprietary_names": ["Tylenol", "FeverAll", "Panadol"]
-                    },
-                    {
-                        "generic_name": "ibuprofen",
-                        "proprietary_names": ["Advil", "Motrin", "Midol IB"]
-                    }
-                ]
-            }
-            return dummy_response
+            return {"llm_response": response.text} # Return the raw text response from Gemini
         else:
-            return {"error": "Gemini API returned no text response."}
+            return {"error": "Gemini API returned no text response.", "full_response": str(response)} # Include full response for debugging
 
     except Exception as e:
         print(f"Error calling Gemini API: {e}")
-        return {"error": f"Failed to call Gemini API: {e}"}
+        return {"error": f"Failed to call Gemini API: {e}", "exception": str(e)}
 
 @app.route('/api/drug-info', methods=['POST'])
 def get_drug_info():
