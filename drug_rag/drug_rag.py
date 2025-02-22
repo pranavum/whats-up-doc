@@ -10,7 +10,6 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.document_loaders import TextLoader, CSVLoader
 from langchain.memory import ConversationBufferMemory
 
-os.environ["GOOGLE_API_KEY"] = 'AIzaSyCqoB9mIoVEzp_hbCe7xpw3ZytSqD5vkwA'
 
 def load_data(csv_file_path):
     """Loads data from a CSV file."""
