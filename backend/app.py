@@ -107,7 +107,7 @@ def call_gemini_with_rag(prompt_text, retreiver, patient_file_content=None):
             patient_data_loader = TextLoader(patient_file_text_path, encoding='utf-8')
             docs = patient_data_loader.load()
 
-            retreiver = retreiver.vectorstore.add_documents(docs)
+            retreiver.vectorstore.add_documents(docs)
             rag_chain = create_rag_chain(retreiver)
         else: # Else, we just create the rag chain with the base retreiver
             rag_chain = create_rag_chain(retreiver)
@@ -149,15 +149,11 @@ def call_gemini_with_rag(prompt_text, retreiver, patient_file_content=None):
 def get_drug_info(): # This represents one pass into the LLM (input -> output)
     prompt_text = request.form.get('promptText')
     patient_file = request.files.get('patientFile')
-    patient_file_content = None
-
-    if patient_file:
-        patient_file_content = patient_file.read().decode('utf-8')
 
     if not prompt_text:
         return jsonify({"error": "Prompt text is required"}), 400
 
-    llm_response = call_gemini_with_rag(prompt_text, base_retreiver, patient_file_content)
+    llm_response = call_gemini_with_rag(prompt_text, base_retreiver, patient_file)
 
     return jsonify(llm_response)
 
