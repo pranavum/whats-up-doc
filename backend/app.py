@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import PyPDF2
-from google import genai
 import os
 from dotenv import load_dotenv
 import os
@@ -17,13 +16,15 @@ from langchain_community.document_loaders import CSVLoader, TextLoader
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.memory import ConversationBufferMemory
 import pypdf
+import assemblyai as aai
+
 
 load_dotenv()  # Load environment variables from .env
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes (for now, can refine later)
 
-csv_file_path = '/Users/sakethkoona/Documents/Coding Stuff/Hackylytics2025/whats-up-doc/drug_rag/sample_insurance_form.txt'
+csv_file_path = 'data/vaFssPharmPrices.csv'
 
 loader = CSVLoader(csv_file_path)
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
@@ -41,11 +42,9 @@ base_retreiver = db_store.as_retriever(search_type='similarity', search_kwargs={
 api_key = os.getenv("GOOGLE_API_KEY")
 if not api_key:
     raise ValueError("GOOGLE_API_KEY environment variable not set.")
-client = genai.Client(api_key=api_key)
-
-
-
-
+else:
+    print("We got the GOOGLE_API_KEY working properly.")
+# client = genai.Client(api_key=api_key)
 
 
 def process_patient_pdf(insur_doc): # insurdoc is a file storage object from flask
@@ -121,22 +120,6 @@ def call_gemini_with_rag(prompt_text, retreiver, patient_file_content=None):
             }
         )
 
-        # response = client.models.generate_content( # Where we get the response
-        #     model='gemini-2.0-flash',
-        #     contents=contents,
-        #     config=types.GenerateContentConfig(
-        #         safety_settings=[
-        #             types.SafetySetting(
-        #                 category='HARM_CATEGORY_HATE_SPEECH',
-        #                 threshold='BLOCK_ONLY_HIGH'
-        #             ),
-        #             types.SafetySetting(
-        #                 category='HARM_CATEGORY_HARASSMENT',
-        #                 threshold='BLOCK_ONLY_HIGH'
-        #             )
-        #         ]
-        #     )
-        # )
         answer = ai_response['answer']
 
         print("Gemini API Response:", answer) # Print the entire response object for inspection
@@ -174,9 +157,56 @@ def get_drug_info(): # This represents one pass into the LLM (input -> output)
     if not prompt_text:
         return jsonify({"error": "Prompt text is required"}), 400
 
-    llm_response = call_gemini_with_rag(prompt_text, patient_file_content)
+    llm_response = call_gemini_with_rag(prompt_text, base_retreiver, patient_file_content)
 
     return jsonify(llm_response)
+
+@app.route('/api/sent-analysis', methods=['GET'])
+def sent_analysis():
+
+    aai.settings.api_key = "3c803922a90e471fa816f8ee7a83a782"
+
+    audio_file = "whats-up-doc/backend/data/voice_memos/voice_memo_1.m4a"
+
+    # Transcribe the audio file
+    config = aai.TranscriptionConfig(sentiment_analysis=True)
+    transcript = aai.Transcriber().transcribe(audio_file, config)
+
+    # Initialize the language model
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash",
+        temperature=0,
+        max_tokens=None
+    )
+
+    # Create the sentiment string from transcript analysis
+    sentiment = ""
+    for sentiment_result in transcript.sentiment_analysis:
+        sentiment += str(sentiment_result.sentiment)  # POSITIVE, NEUTRAL, or NEGATIVE
+        sentiment += str(sentiment_result.confidence)
+
+    # Prepare the message to send to the language model
+    messages = [
+        (
+            "system",
+            """
+            You are a doctor's assistant. You analyze patient voicemail transcripts and summarize their condition.
+            You also suggest possible next steps for the doctor. Your job is purely to summarize and suggest what the 
+            doctor should do in this situation based on proper medical protocols.
+            """
+        ),
+        ("human", transcript.text + sentiment),
+    ]
+
+    # Invoke the language model
+    ai_msg = llm.invoke(messages)
+
+    # Access the content properly using .content attribute
+    summary = ai_msg.content.strip().replace('\n', ' ')
+
+    # Print or use the summary as needed
+    return summary
+
 
 
 if __name__ == '__main__':
