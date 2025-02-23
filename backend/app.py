@@ -157,12 +157,13 @@ def get_drug_info(): # This represents one pass into the LLM (input -> output)
 
     return jsonify(llm_response)
 
+# This method is the API endpoint for the sentiment analysis part
 @app.route('/api/sent-analysis', methods=['GET'])
 def sent_analysis():
 
     aai.settings.api_key = "3c803922a90e471fa816f8ee7a83a782"
 
-    audio_file = "whats-up-doc/backend/data/voice_memos/voice_memo_1.m4a"
+    audio_file = "/data/voice_memos/voice_memo_1.m4a"
 
     # Transcribe the audio file
     config = aai.TranscriptionConfig(sentiment_analysis=True)
