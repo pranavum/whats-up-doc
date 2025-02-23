@@ -34,7 +34,7 @@ function DrugInfoDisplay({ drugInfo }) {
     if (drugInfo.llm_response) {
         return (
             <div className="drug-info-display"> {/* Apply a class for styling */}
-                <h3>Gemini Response:</h3>
+                <h3>Drug Info:</h3>
                 <div className="response-content">
                     {formatResponse(responseText)}
                 </div>

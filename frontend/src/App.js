@@ -53,18 +53,18 @@ function AppContent() {
           <p>To get started, navigate to the Drug Prescription Aid or Sentiment Analysis pages using the navigation bar.</p>
         </div>
       ) : (
-        <>
-          <h1>What's Up Doc - Drug Prescription Aid</h1>
-          <Routes>
-            <Route path="/druginfo" element={
+        <Routes>
+          <Route path="/druginfo" element={
+            <>
+              <h1 style={{ textAlign: 'center' }}>What's Up Doc - Drug Prescription Aid</h1> {/* Centered title */}
               <div className="app-container">
                 <PromptInput onPromptSubmit={handlePromptSubmit} />
                 <DrugInfoDisplay drugInfo={drugInfo} />
               </div>
-            } />
-            <Route path="/sentiment" element={<SentimentAnalysis />} />
-          </Routes>
-        </>
+            </>
+          } />
+          <Route path="/sentiment" element={<SentimentAnalysis />} />
+        </Routes>
       )}
     </>
   );
