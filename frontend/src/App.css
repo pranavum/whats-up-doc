@@ -97,36 +97,44 @@ body {
 
 .drug-info-display-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Allow boxes to wrap to the next line */
   justify-content: center;
-  width: 80%;
-  max-width: 800px;
-  text-align: center;
+  width: 90%;
+  max-width: 1200px;
+  margin: 20px auto; /* Center the container */
 }
 
 .drug-info-box {
   border: 1px solid #ddd;
-  border-radius: 5px;
-  margin: 10px;
-  padding: 15px;
-  flex: 1;
+  border-radius: 8px;
+  margin: 15px;
+  padding: 20px;
+  flex: 1 1 300px; /* Allow boxes to grow, shrink, and have a base width */
   min-width: 250px;
   max-width: 400px;
+  background-color: white; /* Add background color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
 
 .info-column {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .info-column h3 {
   margin-top: 0;
   color: #333;
+  font-size: 1.2em;
 }
 
 .info-column p,
 .info-column ul {
   margin: 0;
   padding-left: 20px;
+  font-size: 1em;
+}
+
+.info-column ul {
+  list-style-type: disc; /* Use bullet points for lists */
 }
 
 .file-name-bubble {
@@ -140,4 +148,27 @@ body {
   transform: translateX(-50%);
   display: inline-block;
   font-size: 14px;
+}
+
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh; /* Adjust as needed */
+  text-align: center;
+  padding: 20px;
+  font-family: 'NekstLight', sans-serif;
+  color: #333;
+}
+
+.home-container h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+.home-container p {
+  font-size: 1.2em;
+  margin-bottom: 10px;
 }

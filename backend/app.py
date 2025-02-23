@@ -17,6 +17,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.memory import ConversationBufferMemory
 import pypdf
 import assemblyai as aai
+import re
 
 
 load_dotenv()  # Load environment variables from .env
@@ -30,6 +31,7 @@ loader = CSVLoader(csv_file_path)
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 embedder = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=os.getenv("GOOGLE_API_KEY"))
 memory = ConversationBufferMemory(memory_key="chat_history", output_key="AI", return_messages=True)
+audio_file = "/Users/sakethkoona/Documents/Coding Stuff/Hackylytics2025/whats-up-doc/backend/data/voice_memos/voice_memo_1.m4a"
 
 
 # Setting up RAG stuff
@@ -44,7 +46,6 @@ if not api_key:
     raise ValueError("GOOGLE_API_KEY environment variable not set.")
 else:
     print("We got the GOOGLE_API_KEY working properly.")
-# client = genai.Client(api_key=api_key)
 
 
 def process_patient_pdf(insur_doc): # insurdoc is a file storage object from flask
@@ -97,9 +98,6 @@ def create_rag_chain(retreiver):
 def call_gemini_with_rag(prompt_text, retreiver, patient_file_content=None):
     print("Calling Gemini with prompt:", prompt_text)
 
-    if patient_file_content: # Debugging purposes
-        print("Patient file content received (first 50 chars):", patient_file_content[:50] + "...")
-
     try:
         if patient_file_content: # If we have an uploaded patient file, we add it to the retreiver and then create that rag chain
             patient_file_text_path = process_patient_pdf(patient_file_content)
@@ -144,7 +142,6 @@ def call_gemini_with_rag(prompt_text, retreiver, patient_file_content=None):
         return {"error": f"Failed to call Gemini API: {e}", "exception": str(e)}
 
 
-
 @app.route('/api/drug-info', methods=['POST'])
 def get_drug_info(): # This represents one pass into the LLM (input -> output)
     prompt_text = request.form.get('promptText')
@@ -157,14 +154,11 @@ def get_drug_info(): # This represents one pass into the LLM (input -> output)
 
     return jsonify(llm_response)
 
+
+
 # This method is the API endpoint for the sentiment analysis part
 @app.route('/api/sent-analysis', methods=['GET'])
 def sent_analysis():
-
-    aai.settings.api_key = "3c803922a90e471fa816f8ee7a83a782"
-
-    audio_file = "/data/voice_memos/voice_memo_1.m4a"
-
     # Transcribe the audio file
     config = aai.TranscriptionConfig(sentiment_analysis=True)
     transcript = aai.Transcriber().transcribe(audio_file, config)
