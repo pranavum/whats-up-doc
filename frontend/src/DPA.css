@@ -1,0 +1,143 @@
+/* src/App.css */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background-color: #FAF9F5;
+}
+
+.app-container {
+  font-family: 'NekstLight', sans-serif;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  color: #333;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.prompt-input-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 900px;
+}
+
+.prompt-textarea-wrapper {
+  position: relative;
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+  width: 100%;
+  margin-top: 20px; /* Add margin to create space */
+}
+
+.prompt-textarea {
+  flex-grow: 1;
+  flex-basis: 65%;
+  padding: 10px;
+  border: none;
+  font-size: 16px;
+  min-height: 100px;
+  resize: vertical;
+  background-color: #FAF9F5;
+  color: #333;
+  outline: none;
+}
+
+.input-actions-left,
+.input-actions-right {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background-color: #FAF9F5;
+}
+
+.file-upload-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #CC785C;
+  padding: 0;
+  margin-right: 10px;
+}
+
+.submit-button {
+  background-color: #CC785C;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+}
+
+.submit-button::before {
+  content: '▶';
+  font-size: 20px;
+}
+
+.file-upload-input {
+  display: none;
+}
+
+.drug-info-display-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 80%;
+  max-width: 800px;
+  text-align: center;
+}
+
+.drug-info-box {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 15px;
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
+}
+
+.info-column {
+  margin-bottom: 10px;
+}
+
+.info-column h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.info-column p,
+.info-column ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.file-name-bubble {
+  background-color: #CC785C;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  position: absolute;
+  top: -20px; /* Adjust this to create more space */
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-block;
+  font-size: 14px;
+}

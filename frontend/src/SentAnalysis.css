@@ -1,0 +1,71 @@
+/* SentAnalysis.css */
+
+.sent-analysis {
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    background-color: #f4f7fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h1 {
+    color: #333;
+    margin-bottom: 30px;
+  }
+  
+  .styled-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .styled-table th, .styled-table td {
+    padding: 12px;
+    text-align: left;
+    font-size: 16px;
+  }
+  
+  .styled-table th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .styled-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .styled-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .styled-table td {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .styled-table td:last-child {
+    max-width: 400px;
+    word-wrap: break-word;
+  }
+  
+  .reviewed {
+    background-color: #4CAF50;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  
+  .not-reviewed {
+    background-color: #f44336;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  
