@@ -1,0 +1,7 @@
+/* src/fonts.css */
+@font-face {
+    font-family: 'NekstLight'; /* Choose a name for your font */
+    src: url('./fonts/FontsFreeNetNekstLight.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
