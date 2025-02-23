@@ -1,30 +1,34 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from google import genai
+import google.genai as genai
 from google.genai import types
 import os
 from dotenv import load_dotenv
+import logging
 
-load_dotenv()  # Load environment variables from .env
+load_dotenv()
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes (for now, can refine later)
+CORS(app)
 
-# Configure Gemini API client
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 api_key = os.getenv("GOOGLE_API_KEY")
 if not api_key:
+    logging.error("GOOGLE_API_KEY environment variable not set.")
     raise ValueError("GOOGLE_API_KEY environment variable not set.")
 client = genai.Client(api_key=api_key)
 
 def call_gemini_with_rag(prompt_text, patient_file_content=None):
-    print("Calling Gemini with prompt:", prompt_text)
+    logging.info(f"Calling Gemini with prompt: {prompt_text}")
     if patient_file_content:
-        print("Patient file content received (first 50 chars):", patient_file_content[:50] + "...")
+        logging.info(f"Patient file content received (first 50 chars): {patient_file_content[:50]}...")
 
     try:
         contents = [prompt_text]
         if patient_file_content:
-            contents.append({"text": patient_file_content}) # Ensure patient file content is also in contents
+            contents.append(patient_file_content)
 
         response = client.models.generate_content(
             model='gemini-2.0-flash',
@@ -43,16 +47,16 @@ def call_gemini_with_rag(prompt_text, patient_file_content=None):
             )
         )
 
-        print("Gemini API Response:", response) # Print the entire response object for inspection
-
-        if response.text:
-            return {"llm_response": response.text} # Return the raw text response from Gemini
+        if response and response.candidates and response.candidates[0].content.parts:
+            gemini_text = response.candidates[0].content.parts[0].text
+            return {"llm_response": gemini_text}
         else:
-            return {"error": "Gemini API returned no text response.", "full_response": str(response)} # Include full response for debugging
+            logging.warning("Gemini API returned an empty or malformed response.")
+            return {"llm_response": "Gemini API returned an empty or unexpected response."}
 
     except Exception as e:
-        print(f"Error calling Gemini API: {e}")
-        return {"error": f"Failed to call Gemini API: {e}", "exception": str(e)}
+        logging.error(f"Error calling Gemini API: {e}")
+        return {"error": f"Failed to call Gemini API: {e}"}
 
 @app.route('/api/drug-info', methods=['POST'])
 def get_drug_info():
@@ -61,7 +65,11 @@ def get_drug_info():
     patient_file_content = None
 
     if patient_file:
-        patient_file_content = patient_file.read().decode('utf-8')
+        try:
+            patient_file_content = patient_file.read().decode('utf-8')
+        except Exception as e:
+            logging.error(f"Error reading patient file: {e}")
+            return jsonify({"error": "Error reading patient file"}), 400
 
     if not prompt_text:
         return jsonify({"error": "Prompt text is required"}), 400
