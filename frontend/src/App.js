@@ -1,37 +1,20 @@
-import logo from './logo.svg';
 import './App.css';
 import './fonts.css'; // Import your fonts.css
-
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import SentAnalysis from './SentAnalysis'; // import the Sent Analysis page
+import Navigation from './Navigation'
+import DPA from './DPA';
 
 function App() {
-    const [drugInfo, setDrugInfo] = useState(null);
-
-    const handlePromptSubmit = async (promptText, patientFile) => {
-        const formData = new FormData(); // To send files and text
-        formData.append('promptText', promptText);
-        if (patientFile) {
-            formData.append('patientFile', patientFile);
-        }
-
-        try {
-            const response = await axios.post('http://127.0.0.1:5000/api/drug-info', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data' // Important for file uploads
-                }
-            });
-            setDrugInfo(response.data); // Update state with drug info from backend
-        } catch (error) {
-            console.error("Error fetching drug information:", error);
-            // Handle error states in UI (e.g., display an error message)
-            setDrugInfo({ error: "Failed to fetch drug information. Please try again." });
-        }
-    };
 
     return (
         <div className="app-container">
-            <h1>What's Up Doc - Drug Prescription Aid</h1>
-            <PromptInput onPromptSubmit={handlePromptSubmit} />
-            <DrugInfoDisplay drugInfo={drugInfo} />
+            <Router>
+                <Routes>
+                    <Route path="/DPA" element={<DPA/>} />
+                    <Route path="/SentAnalysis" element={<SentAnalysis/>} />
+                </Routes>
+            </Router>
         </div>
     );
 }
