@@ -1,0 +1,55 @@
+/* src/DrugInfoDisplay.css */
+.drug-info-display {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-family: 'Nekst', sans-serif; /* Apply the Nekst font */
+}
+
+.drug-info-display h3 {
+    font-size: 1.3em; /* Slightly larger headings */
+    margin-top: 15px;
+    margin-bottom: 8px; /* Slightly more bottom margin */
+    color: #333; /* Darker heading color */
+    font-weight: bold;
+    border-bottom: 1px solid #eee; /* Add a subtle underline to headings */
+    padding-bottom: 5px;
+}
+
+.drug-info-display strong {
+    font-weight: bolder;
+    color: #007bff; /* Example accent color for bold text (blue) */
+}
+
+.drug-info-display p {
+    margin-bottom: 12px; /* Increased paragraph spacing */
+    line-height: 1.7; /* Improved line height for readability */
+    color: #555; /* Slightly darker paragraph text */
+    font-size: 1.05em; /* Slightly larger font size for paragraphs */
+}
+
+.drug-info-display .intro-paragraph {
+    font-style: italic;
+    color: #777; /* Slightly lighter italic text */
+    margin-bottom: 18px; /* More margin below intro paragraph */
+}
+
+.drug-info-display hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 20px 0; /* More margin around horizontal rule */
+}
+
+.drug-info-display br + br {
+    display: block;
+    content: "";
+    margin-bottom: 12px; /* Increased paragraph spacing for <br><br> paragraphs */
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}

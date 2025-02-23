@@ -3,41 +3,50 @@ import React, { useState } from 'react';
 import PromptInput from './PromptInput';
 import DrugInfoDisplay from './DrugInfoDisplay';
 import axios from 'axios';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SentimentAnalysis from './SentimentAnalysis';
+import NavBar from './NavBar';
 import './App.css';
-import './fonts.css'; // Import your fonts.css
-
+import './fonts.css';
 
 function App() {
-    const [drugInfo, setDrugInfo] = useState(null);
+  const [drugInfo, setDrugInfo] = useState(null);
 
-    const handlePromptSubmit = async (promptText, patientFile) => {
-        const formData = new FormData(); // To send files and text
-        formData.append('promptText', promptText);
-        if (patientFile) {
-            formData.append('patientFile', patientFile);
+  const handlePromptSubmit = async (promptText, patientFile) => {
+    const formData = new FormData();
+    formData.append('promptText', promptText);
+    if (patientFile) {
+      formData.append('patientFile', patientFile);
+    }
+
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/api/drug-info', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
         }
+      });
+      setDrugInfo(response.data);
+    } catch (error) {
+      console.error("Error fetching drug information:", error);
+      setDrugInfo({ error: "Failed to fetch drug information. Please try again." });
+    }
+  };
 
-        try {
-            const response = await axios.post('http://127.0.0.1:5000/api/drug-info', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data' // Important for file uploads
-                }
-            });
-            setDrugInfo(response.data); // Update state with drug info from backend
-        } catch (error) {
-            console.error("Error fetching drug information:", error);
-            // Handle error states in UI (e.g., display an error message)
-            setDrugInfo({ error: "Failed to fetch drug information. Please try again." });
-        }
-    };
-
-    return (
-        <div className="app-container">
-            <h1>What's Up Doc - Drug Prescription Aid</h1>
+  return (
+    <Router>
+      <NavBar />
+      <h1>What's Up Doc - Drug Prescription Aid</h1>
+      <Routes>
+        <Route path="/druginfo" element={
+          <div className="app-container">
             <PromptInput onPromptSubmit={handlePromptSubmit} />
             <DrugInfoDisplay drugInfo={drugInfo} />
-        </div>
-    );
+          </div>
+        } />
+        <Route path="/sentiment" element={<SentimentAnalysis />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
