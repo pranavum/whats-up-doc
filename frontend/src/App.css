@@ -149,3 +149,26 @@ body {
   display: inline-block;
   font-size: 14px;
 }
+
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh; /* Adjust as needed */
+  text-align: center;
+  padding: 20px;
+  font-family: 'NekstLight', sans-serif;
+  color: #333;
+}
+
+.home-container h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+.home-container p {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}

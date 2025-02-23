@@ -3,13 +3,21 @@ import React, { useState } from 'react';
 import PromptInput from './PromptInput';
 import DrugInfoDisplay from './DrugInfoDisplay';
 import axios from 'axios';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import SentimentAnalysis from './SentimentAnalysis';
 import NavBar from './NavBar';
 import './App.css';
 import './fonts.css';
 
 function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}
+
+function AppContent() {
   const [drugInfo, setDrugInfo] = useState(null);
 
   const handlePromptSubmit = async (promptText, patientFile) => {
@@ -32,20 +40,33 @@ function App() {
     }
   };
 
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
   return (
-    <Router>
+    <>
       <NavBar />
-      <h1>What's Up Doc - Drug Prescription Aid</h1>
-      <Routes>
-        <Route path="/druginfo" element={
-          <div className="app-container">
-            <PromptInput onPromptSubmit={handlePromptSubmit} />
-            <DrugInfoDisplay drugInfo={drugInfo} />
-          </div>
-        } />
-        <Route path="/sentiment" element={<SentimentAnalysis />} />
-      </Routes>
-    </Router>
+      {isHomePage ? (
+        <div className="home-container">
+          <h1>Welcome to What's Up Doc</h1>
+          <p>Your AI-powered drug prescription aid and sentiment analysis tool.</p>
+          <p>To get started, navigate to the Drug Prescription Aid or Sentiment Analysis pages using the navigation bar.</p>
+        </div>
+      ) : (
+        <>
+          <h1>What's Up Doc - Drug Prescription Aid</h1>
+          <Routes>
+            <Route path="/druginfo" element={
+              <div className="app-container">
+                <PromptInput onPromptSubmit={handlePromptSubmit} />
+                <DrugInfoDisplay drugInfo={drugInfo} />
+              </div>
+            } />
+            <Route path="/sentiment" element={<SentimentAnalysis />} />
+          </Routes>
+        </>
+      )}
+    </>
   );
 }
 
