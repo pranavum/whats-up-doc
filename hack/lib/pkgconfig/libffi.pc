@@ -1,0 +1,11 @@
+prefix=/Users/sohamshetty/Desktop/whats-up-doc/hack
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+toolexeclibdir=${libdir}
+includedir=/Users/sohamshetty/Desktop/whats-up-doc/hack/include
+
+Name: libffi
+Description: Library supporting Foreign Function Interfaces
+Version: 3.4.4
+Libs: -L${toolexeclibdir} -lffi
+Cflags: -I${includedir}

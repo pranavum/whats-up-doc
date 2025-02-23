@@ -3,7 +3,7 @@ from flask_cors import CORS
 import PyPDF2
 import os
 from dotenv import load_dotenv
-import os
+import re
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain.vectorstores import FAISS
@@ -24,7 +24,7 @@ load_dotenv()  # Load environment variables from .env
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes (for now, can refine later)
 
-csv_file_path = 'data/vaFssPharmPrices.csv'
+csv_file_path = '/Users/sohamshetty/Desktop/whats-up-doc/backend/data/vaFssPharmPrices.csv'
 
 loader = CSVLoader(csv_file_path)
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
@@ -143,7 +143,11 @@ def call_gemini_with_rag(prompt_text, retreiver, patient_file_content=None):
         print(f"Error calling Gemini API: {e}")
         return {"error": f"Failed to call Gemini API: {e}", "exception": str(e)}
 
-
+def remove_markdown(text):
+    # Remove bold (**), italics (*), and other Markdown formatting
+    text = re.sub(r'(\*{1,2})(.*?)\1', r'\2', text)  # Remove * and ** for bold/italics
+    text = re.sub(r'\n', ' ', text)  # Remove newlines
+    return text.strip()
 
 @app.route('/api/drug-info', methods=['POST'])
 def get_drug_info(): # This represents one pass into the LLM (input -> output)
@@ -158,7 +162,7 @@ def get_drug_info(): # This represents one pass into the LLM (input -> output)
         return jsonify({"error": "Prompt text is required"}), 400
 
     llm_response = call_gemini_with_rag(prompt_text, base_retreiver, patient_file_content)
-
+    llm_response = remove_markdown(str(llm_response))
     return jsonify(llm_response)
 
 @app.route('/api/sent-analysis', methods=['GET'])

@@ -1,0 +1,13 @@
+prefix=/Users/sohamshetty/Desktop/whats-up-doc/hack
+exec_prefix=/Users/sohamshetty/Desktop/whats-up-doc/hack
+libdir=/Users/sohamshetty/Desktop/whats-up-doc/hack/lib
+sharedlibdir=/Users/sohamshetty/Desktop/whats-up-doc/hack/lib
+includedir=/Users/sohamshetty/Desktop/whats-up-doc/hack/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.13
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}
